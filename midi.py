@@ -8,7 +8,7 @@ def list_ports():
     for port in range(midi_in.getPortCount()):
         print('{} - {}'.format(port, midi_in.getPortName(port)))
 
-        
+
 def main(argv):
     if len(argv) != 2:
         list_ports()
@@ -29,7 +29,8 @@ def main(argv):
         print('')
     finally:
         midi_in.closePort()
-        del midi_in               
+        del midi_in
+
 
 if __name__ == '__main__':
     main(sys.argv)
