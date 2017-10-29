@@ -1,30 +1,35 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.Qt import QPixmap
-from ui.mainwindow_ui import Ui_MainWindow
-from sheet import SheetMusic
+from PyQt5.QtWidgets import (QAction, QApplication, QLineEdit, QMainWindow,
+        QSizePolicy, QStyle, QTextEdit)
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+
+from practice import PracticeSession
 
 
-class MainWindow(QMainWindow, Ui_MainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.sheet = SheetMusic()
-        self.setupUi(self)
+        self.view = QWebEngineView(self)
+        self.setCentralWidget(self.view)
+        self.view.loadFinished.connect(self.finishLoading)
+        self.practice_session = PracticeSession(self)
+        self.practice_session.start_session()
 
-        image = self.sheet.generate_QImage('c1')
-        if image is None:
-            self.notesImageLabel.setText('Error')
-        else:
-            self.notesImageLabel.setPixmap(QPixmap.fromImage(image))
+    def finishLoading(self):
+        #self.practice_session.start_session()
+        pass
 
-
-def main():
-    app = QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
-    sys.exit(app.exec_())
+    def set_exercise_svg(self, svg_data):
+        self.view.setHtml(svg_data)
 
 
 if __name__ == '__main__':
-    main()
+
+    import sys
+
+    app = QApplication(sys.argv)
+
+    main_window = MainWindow()
+    main_window.show()
+
+    sys.exit(app.exec_())
